@@ -15,4 +15,6 @@
     <color name="Today">@color/CC1</color>
     <color name="Unread">@color/CC1</color>
     <color name="absent">@color/warning</color>
+
+    <color name="color_one">#fb7268</color>
 </resources>
