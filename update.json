@@ -1,5 +1,5 @@
 {
-  "url": "https://github.com/AzzurraCox/CCULife2/releases/download/v2.0.10/cculife-release.apk",
-  "versionCode": 1,
-  "updateMessage": "1. 适配 Android 8.0\n2. 适配 Android 9.0\n3. 更新说明"
+  "url": "https://github.com/AzzurraCox/CCULife2/releases/download/v2.0.12/cculife-release.apk",
+  "versionCode": 2,
+  "updateMessage": "1. 新增通知功能\n2. 新增通知功能\n3. 新增App自動更新\n4. Fix bugs"
 }
