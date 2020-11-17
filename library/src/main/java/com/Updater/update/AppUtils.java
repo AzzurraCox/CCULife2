@@ -3,10 +3,7 @@ package com.Updater.update;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
-/**
- * @author feicien (ithcheng@gmail.com)
- * @since 2016-07-05 17:41
- */
+
 
 public class AppUtils {
 

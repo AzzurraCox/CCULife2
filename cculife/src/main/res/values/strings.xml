@@ -6,6 +6,7 @@
     <string name="setting">設定</string>
     <string name="classmate">修課同學</string>
     <string name="map">地圖</string>
+    <string name="covid">Covid 19</string>
 
     <string name="title_activity_home">@string/app_name</string>
     <string name="title_activity_ecourse">@string/ecourse</string>
@@ -38,6 +39,7 @@
     <string name="thursday">星期四</string>
     <string name="friday">星期五</string>
 
+    <string name="about_update">檢查更新</string>
     <string name="about">關於</string>
     <string name="author">作者</string>
     <string name="author_say">CCULife 萬歲!!!</string>

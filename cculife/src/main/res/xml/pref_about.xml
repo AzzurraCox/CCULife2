@@ -34,5 +34,8 @@
         android:title="@string/about">
         <intent android:action="org.zankio.cculife.ui.AboutActivity"/>
     </Preference>
+    <Preference
+        android:key="about_update"
+        android:title="@string/about_update" />
 
 </PreferenceScreen>

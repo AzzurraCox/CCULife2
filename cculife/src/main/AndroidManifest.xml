@@ -23,6 +23,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/NewAppTheme">
+        <activity android:name=".ui.CovidActivity"
+            android:label="@string/covid"></activity>
         <activity
             android:name=".ui.map.MapActivity"
             android:label="@string/title_activity_ccumap" />
@@ -90,9 +92,12 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="3dae68a28052d10a443a222bd0582019fb8f0947" />
+        <service android:name=".ui.FirebaseMessageReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

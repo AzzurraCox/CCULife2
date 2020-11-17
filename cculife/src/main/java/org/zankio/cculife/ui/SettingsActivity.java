@@ -17,6 +17,8 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 
+import com.Updater.update.UpdateChecker;
+
 import org.zankio.ccudata.ecourse.source.local.DatabaseBaseSource;
 import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
@@ -46,6 +48,15 @@ public class SettingsActivity extends PreferenceActivity implements UserManager.
         super.onPostCreate(savedInstanceState);
 
         setupSimplePreferencesScreen();
+
+        Preference update = findPreference("about_update");
+        update.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                UpdateChecker.checkForDialog(SettingsActivity.this);
+                return false;
+            }
+        });
     }
 
     private void setupSimplePreferencesScreen() {
