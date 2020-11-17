@@ -109,6 +109,7 @@ public class PTXTrainLiveDelaySource extends HTTPJSONSource<TrainRequest, TrainT
             item.lineType = parseLineType(traininfo.getInt("TripLine"));
             item.delay = parseDelay(traininfo.getString("DelayTime"));
             item.to = traininfo.getJSONObject("EndingStationName").getString("Zh_tw");
+            //Log.d("traininfo", traininfo.getJSONObject("EndingStationName").getString("Zh_tw"));
             item.departure = traininfo.getString("ScheduledDepartureTime").substring(0, 5);
             item.trainType = parseTrainClassification(traininfo.getString("TrainTypeID"));
 

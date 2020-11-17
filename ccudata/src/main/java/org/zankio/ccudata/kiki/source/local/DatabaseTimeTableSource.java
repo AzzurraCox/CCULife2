@@ -43,7 +43,7 @@ import static org.zankio.ccudata.kiki.source.remote.TimetableSource.randomColor;
 @DataType({ DatabaseTimeTableSource.TYPE, DatabaseTimeTableSource.TYPE_USERADD})
 public class DatabaseTimeTableSource extends DatabaseBaseSource<SemesterData, TimeTable> {
     public final static String TYPE = TimetableSource.TYPE;
-    public final static String TYPE_USERADD = "TIMETABLE_USERADD";
+    public final static String TYPE_USERADD = "_USERATIMETABLEDD";
     public final static String[] DATA_TYPES = { TYPE, TYPE_USERADD};
 
     private final static String[] timetableColumn = {
@@ -151,8 +151,8 @@ public class DatabaseTimeTableSource extends DatabaseBaseSource<SemesterData, Ti
 
         String where;
         if (TYPE_USERADD.equals(request.type)) where = TIME_COLUMN_USERADD + " = 1";
-        else where = TIME_COLUMN_USERADD + " = 0";
-
+        else if (TYPE_USERADD.equals("TIMETABLE")) where = TIME_COLUMN_USERADD + " = 0";
+        else where = TIME_COLUMN_USERADD + " = 2";
         Cursor cursor = database.query(
                 TABLE_TIMETABLE,
                 timetableColumn,

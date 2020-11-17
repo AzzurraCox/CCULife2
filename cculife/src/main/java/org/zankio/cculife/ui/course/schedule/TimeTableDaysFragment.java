@@ -3,10 +3,12 @@ package org.zankio.cculife.ui.course.schedule;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import rx.Subscriber;
 
@@ -43,6 +46,8 @@ public class TimeTableDaysFragment extends BaseMessageFragment
     private ViewPager mViewPager;
     private int lastPage = -1;
     private Subscriber<TimeTable> subscriber;
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -142,6 +147,8 @@ public class TimeTableDaysFragment extends BaseMessageFragment
             final int week = position + 1;
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View view = inflater.inflate(R.layout.fragment_course_timetable_day, container, false);
+            View view2 = inflater.inflate(R.layout.edit_course,container,false);
+            EditText edit_classroom = view2.findViewById(R.id.edit_classroom);
 
             adapter[week] = new TimeTableAdapter(getWeekClasses(week));
             list[week] = (ListView) view.findViewById(R.id.list);
@@ -152,26 +159,60 @@ public class TimeTableDaysFragment extends BaseMessageFragment
                 old = view1;
             });
 
+            AtomicInteger course_userAdd = new AtomicInteger();
+
             list[week].setOnItemLongClickListener((parent, view1, position1, id) -> {
                 final TimeTable.Class course = (TimeTable.Class) parent.getAdapter().getItem(position1);
-                if (course.userAdd == 0) return false;
+                Log.d("course.userAdd", String.valueOf(course.userAdd));
+                course_userAdd.set(course.userAdd);
 
-                new AlertDialog.Builder(getContext())
-                        .setTitle("刪除旁聽課程?")
-                        .setPositiveButton(R.string.ok, (dialog, which) -> {
-                            timeTable.remove(course);
-                            new DatabaseTimeTableSource(new Repository(getContext()) {
-                                @Override
-                                protected BaseSource[] getSources() {
-                                    return new BaseSource[0];
-                                }
-                            }).storeTimeTable(timeTable, true);
-                            updateTimeTable(mViewPager.getCurrentItem());
-                        })
-                        .setNegativeButton(R.string.cancel, (dialog, which) -> { dialog.dismiss(); })
-                        .create()
-                        .show();
-                return false;
+                if (course.userAdd == 1) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("刪除旁聽課程?")
+                            .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                timeTable.remove(course);
+                                new DatabaseTimeTableSource(new Repository(getContext()) {
+                                    @Override
+                                    protected BaseSource[] getSources() {
+                                        return new BaseSource[0];
+                                    }
+                                }).storeTimeTable(timeTable, true);
+                                updateTimeTable(mViewPager.getCurrentItem());
+                            })
+                            .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .create()
+                            .show();
+                }
+                else {
+                    if(view2.getParent() != null) {
+                        ((ViewGroup)view2.getParent()).removeView(view2);
+                    }
+                    edit_classroom.setText(course.classroom);
+                    new AlertDialog.Builder(getContext())
+                            .setView(view2)
+                            .setTitle("編輯"+course.name)
+                            .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                Log.d("test1", edit_classroom.getText().toString());
+                                course.classroom = edit_classroom.getText().toString();
+                                course.userAdd = 2;
+                                timeTable.edit(course);
+                                new DatabaseTimeTableSource(new Repository(getContext()) {
+                                    @Override
+                                    protected BaseSource[] getSources() {
+                                        return new BaseSource[0];
+                                    }
+                                }).storeTimeTable(timeTable, true);
+                                updateTimeTable(mViewPager.getCurrentItem());
+                            })
+                            .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .create()
+                            .show();
+                }
+                return true;
             });
             container.addView(view, 0);
             return view;
@@ -246,7 +287,6 @@ public class TimeTableDaysFragment extends BaseMessageFragment
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             TimeTable.Class course = (TimeTable.Class) getItem(position);
-
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.US);
 
             View view;

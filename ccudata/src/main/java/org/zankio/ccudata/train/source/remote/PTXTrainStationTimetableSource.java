@@ -74,7 +74,8 @@ public class PTXTrainStationTimetableSource extends HTTPJSONSource<TrainRequest,
             JSONObject traininfo = traininfos.getJSONObject(i);
             TrainTimetable.Item item = trainTimetable.new Item();
             item.trainNo = traininfo.getString("TrainNo");
-            item.to = traininfo.getString("EndingStationName");
+            item.to = traininfo.getJSONObject("EndingStationName").getString("Zh_tw");
+            Log.d("sationname", traininfo.getString("EndingStationName"));
             item.departure = traininfo.getString("DepartureTime").substring(0, 5);
             item.trainType = parseTrainClassification(traininfo.getJSONObject("TrainTypeName").getString("Zh_tw"));
 

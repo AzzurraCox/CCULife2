@@ -37,10 +37,23 @@ public class TimeTable {
         }
     }
 
+    public void edit(Class course) {
+        for (Day day: days) {
+            for (int i = 0; i < day.classList.size(); i++) {
+                Class c = day.classList.get(i);
+                if (c.course_id.equals(course.course_id)) {
+                    i++;
+                    day.classList.add(c);
+
+                }
+            }
+        }
+    }
+
     public boolean exist(String course_id) {
         for (Day day: days) {
             for (Class c: day.classList) {
-                if (c.course_id.equals(course_id)) {
+                if (c.course_id.equals(course_id) && c.userAdd != 3) {
                     return true;
                 }
             }

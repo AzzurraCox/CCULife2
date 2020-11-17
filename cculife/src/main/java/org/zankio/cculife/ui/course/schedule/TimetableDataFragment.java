@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
 import org.zankio.ccudata.base.model.OfflineMode;
 import org.zankio.ccudata.base.model.Request;
 import org.zankio.ccudata.base.model.Response;
