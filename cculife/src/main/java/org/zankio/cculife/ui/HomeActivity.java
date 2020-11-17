@@ -2,6 +2,7 @@ package org.zankio.cculife.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -11,7 +12,18 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.Updater.update.UpdateChecker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.zankio.cculife.Debug;
 import org.zankio.cculife.R;
 import org.zankio.cculife.UserManager;
 import org.zankio.cculife.ui.base.BaseActivity;
@@ -26,8 +38,10 @@ public class HomeActivity extends BaseActivity {
     private static final int ACTIVITY_LOGIN = 1;
 
     private CCUService loadServices;
-    private UserManager sessionManager;
+     private UserManager sessionManager;
     private CCUService[] ccuServices;
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private void initMenu() {
         ccuServices = new CCUService[]{
@@ -37,6 +51,8 @@ public class HomeActivity extends BaseActivity {
                 , new CCUService(ScoreQueryActivity.class, getString(R.string.score_query), R.drawable.score, true)
                 , new CCUService(CCUScheduleActivity.class, getString(R.string.schedule), R.drawable.ccuschedule)
                 , new CCUService(TransportActivity.class, getString(R.string.transport), R.drawable.trans)
+
+                , new CCUService(CovidActivity.class, getString(R.string.covid), R.drawable.covid)
                 , new CCUService(SettingsActivity.class, getString(R.string.setting), R.drawable.setting)
                 //, new CCUService(null, "飲食", null)
                 //, new CCUService(null, "選課", null, true)
@@ -51,6 +67,10 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initMenu();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        UpdateChecker.checkForDialog(this);
+
 
         sessionManager = UserManager.getInstance(this);
 
@@ -68,6 +88,28 @@ public class HomeActivity extends BaseActivity {
             }
         });
         // new Updater(this).checkUpdate();
+        if (Debug.debug == true) {
+            FirebaseMessaging.getInstance().getToken()
+                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                        @Override
+                        public void onComplete(@NonNull Task<String> task) {
+                            if (!task.isSuccessful()) {
+                                Log.w("Token", "Fetching FCM registration token failed", task.getException());
+                                return;
+                            }
+
+                            // Get new FCM registration token
+                            String token = task.getResult();
+
+                            // Log and toast
+                            String msg = token;
+                            Log.d("Token", msg);
+                            Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        FirebaseCrashlytics Crashlytics = FirebaseCrashlytics.getInstance();
+
     }
 
     @Override
